@@ -1,0 +1,35 @@
+name: CSC-201 Visible Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  visible-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - csc201/variant-a-avl-index
+          - csc201/variant-b-hash-cache
+          - csc201/variant-c-graph-router
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.variant }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run visible tests
+        run: python -m pytest -q
